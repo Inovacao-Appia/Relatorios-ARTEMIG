@@ -7,7 +7,7 @@ import calendar
 import streamlit as st
 import pandas as pd
 import oracledb
-import pyodbc
+import pymssql
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.utils import get_column_letter
@@ -38,18 +38,10 @@ except Exception:
     pass
 
 SQL_HOST = _cfg("sqlserver", "SQL_HOST", "192.168.40.22")
-SQL_PORT = _cfg("sqlserver", "SQL_PORT", "1433")
+SQL_PORT = int(_cfg("sqlserver", "SQL_PORT", "1433"))
 SQL_DB   = _cfg("sqlserver", "SQL_DB",   "AT3_db_2")
 SQL_USER = _cfg("sqlserver", "SQL_USER", "sa")
 SQL_PASS = _cfg("sqlserver", "SQL_PASS", "$4dmp4dr40@nasc")
-
-SQL_CONNECTION_STRING = (
-    "DRIVER={{SQL Server}};"
-    "SERVER={host},{port};"
-    "DATABASE={db};"
-    "UID={user};"
-    "PWD={pwd};"
-).format(host=SQL_HOST, port=SQL_PORT, db=SQL_DB, user=SQL_USER, pwd=SQL_PASS)
 
 CONCESSIONARIA = "Via Nascentes"
 
@@ -261,7 +253,13 @@ def get_oracle_connection():
     return oracledb.connect(user=DB_USER, password=DB_PASS, dsn=dsn)
 
 def get_sqlserver_connection():
-    return pyodbc.connect(SQL_CONNECTION_STRING)
+    return pymssql.connect(
+        server=SQL_HOST,
+        port=SQL_PORT,
+        database=SQL_DB,
+        user=SQL_USER,
+        password=SQL_PASS,
+    )
 
 def estilizar_excel(wb, ws, colunas, dados_df):
     hf   = Font(name="Arial", bold=True, color=COR_HEADER_FG, size=10)
@@ -833,7 +831,7 @@ def gerar_sats(mes, ano):
         status_tx.empty()
         st.success("Concluído! {} amostras | {} ocorrências | {:,} linhas totais.".format(
             qtd_am, qtd_oc, total_linhas))
-    except pyodbc.Error as e:
+    except pymssql.Error as e:
         st.error("Erro SQL Server: {}".format(e))
     except Exception as e:
         st.error("Erro: {}".format(e))
