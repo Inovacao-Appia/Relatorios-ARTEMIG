@@ -157,6 +157,15 @@ h1, h2, h3 { color: var(--verde) !important; }
     border-radius: 6px !important;
 }
 
+/* Labels dos inputs */
+[data-testid="stWidgetLabel"] p,
+[data-testid="stWidgetLabel"] label,
+.stSelectbox label,
+.stTextInput label,
+.stNumberInput label {
+    color: var(--texto) !important;
+}
+
 /* Badge de pasta */
 .badge {
     display: inline-block;
