@@ -8,7 +8,6 @@ import streamlit as st
 import pandas as pd
 import oracledb
 import pyodbc
-from dotenv import load_dotenv
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.utils import get_column_letter
@@ -16,28 +15,33 @@ from openpyxl.utils import get_column_letter
 # ══════════════════════════════════════════════════════════════════════════════
 # CONFIGURAÇÃO
 # ══════════════════════════════════════════════════════════════════════════════
-load_dotenv()
+def _cfg(section: str, key: str, default=None):
+    """Lê de st.secrets (deploy) ou variável de ambiente (local)."""
+    try:
+        return st.secrets[section][key]
+    except Exception:
+        return os.getenv(key, default)
 
 BASE_DIR  = os.path.dirname(os.path.abspath(__file__))
 LOGO_PATH = os.path.join(BASE_DIR, "Logos", "Via Appia", "PNG", "Via Appia Positivo.png")
 
-DB_HOST    = os.getenv("DB_HOST", "oracluster")
-DB_PORT    = int(os.getenv("DB_PORT", "1521"))
-DB_SERVICE = os.getenv("DB_SERVICE", "srv_bi")
-DB_USER    = os.getenv("DB_USER")
-DB_PASS    = os.getenv("DB_PASSWORD")
-SK_EMPRESA = int(os.getenv("SK_EMPRESA", "6"))
+DB_HOST    = _cfg("oracle", "DB_HOST",    "oracluster")
+DB_PORT    = int(_cfg("oracle", "DB_PORT", "1521"))
+DB_SERVICE = _cfg("oracle", "DB_SERVICE", "srv_bi")
+DB_USER    = _cfg("oracle", "DB_USER")
+DB_PASS    = _cfg("oracle", "DB_PASSWORD")
+SK_EMPRESA = int(_cfg("oracle", "SK_EMPRESA", "6"))
 
 try:
     oracledb.init_oracle_client()
 except Exception:
     pass
 
-SQL_HOST = os.getenv("SQL_HOST", "192.168.40.22")
-SQL_PORT = os.getenv("SQL_PORT", "1433")
-SQL_DB   = os.getenv("SQL_DB",   "AT3_db_2")
-SQL_USER = os.getenv("SQL_USER", "sa")
-SQL_PASS = os.getenv("SQL_PASS", "$4dmp4dr40@nasc")
+SQL_HOST = _cfg("sqlserver", "SQL_HOST", "192.168.40.22")
+SQL_PORT = _cfg("sqlserver", "SQL_PORT", "1433")
+SQL_DB   = _cfg("sqlserver", "SQL_DB",   "AT3_db_2")
+SQL_USER = _cfg("sqlserver", "SQL_USER", "sa")
+SQL_PASS = _cfg("sqlserver", "SQL_PASS", "$4dmp4dr40@nasc")
 
 SQL_CONNECTION_STRING = (
     "DRIVER={{SQL Server}};"
