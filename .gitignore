@@ -1,0 +1,28 @@
+# ─────────────────────────────────────────────
+# Variáveis de ambiente – NUNCA versionar
+# ─────────────────────────────────────────────
+.env
+*.env
+.env.*
+
+# Cache Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Streamlit cache
+.streamlit/secrets.toml
+
+# Ambientes virtuais
+venv/
+.venv/
+env/
+ENV/
+
+# IDEs
+.vscode/
+.idea/
+
+# Outputs gerados
+*.xlsx
+*.xls
