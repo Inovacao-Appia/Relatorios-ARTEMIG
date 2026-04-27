@@ -142,8 +142,37 @@ h1, h2, h3 { color: var(--verde) !important; }
 /* Progress bar */
 .stProgress > div > div > div > div { background-color: var(--laranja) !important; }
 
+/* Texto geral */
+.stApp, .stApp p, .stApp span, .stApp div,
+.stMarkdown, .stMarkdown p, .stMarkdown span,
+[data-testid="stText"], [data-testid="stCaptionContainer"] p {
+    color: var(--texto) !important;
+}
+
 /* Métricas */
 [data-testid="stMetricValue"] { color: var(--verde) !important; font-weight: 700 !important; }
+[data-testid="stMetricLabel"] p { color: var(--texto) !important; font-weight: 600 !important; }
+[data-testid="stMetricDelta"]   { color: #555 !important; }
+
+/* Progress bar — texto do label */
+[data-testid="stProgress"] p,
+[data-testid="stProgressBar"] + p,
+.stProgress p { color: var(--texto) !important; }
+
+/* Alertas: info, warning, error, success */
+[data-testid="stAlert"] p,
+[data-testid="stAlert"] span,
+[data-testid="stNotification"] p,
+[data-testid="stNotification"] span,
+div[class*="stInfo"] p,
+div[class*="stWarning"] p,
+div[class*="stError"] p,
+div[class*="stSuccess"] p {
+    color: var(--texto) !important;
+}
+
+/* Spinner */
+[data-testid="stSpinner"] p { color: var(--texto) !important; }
 
 /* Inputs */
 .stSelectbox > div > div,
@@ -817,7 +846,10 @@ def gerar_sats(mes, ano):
                   AND Instante <= '{dt_fim}'
                 ORDER BY Instante DESC
             """.format(tabela=nome_tabela, dt_ini=data_inicio, dt_fim=data_fim)
-            df = pd.read_sql(query, conn)
+            cursor = conn.cursor()
+            cursor.execute(query)
+            cols = [d[0] for d in cursor.description]
+            df   = pd.DataFrame(cursor.fetchall(), columns=cols)
             total_linhas += len(df)
             if nome_tabela.endswith("_Amostra"): qtd_am += 1
             else:                                qtd_oc += 1
