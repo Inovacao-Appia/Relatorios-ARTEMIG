@@ -6,8 +6,16 @@ import calendar
 
 import streamlit as st
 import pandas as pd
-import oracledb
 import pymssql
+import oracledb
+import os
+
+try:
+    lib_dir = [d for d in os.listdir('/opt') if d.startswith('instantclient')][0]
+    oracledb.init_oracle_client(lib_dir=f"/opt/{lib_dir}")
+except Exception as e:
+    print(f"Erro ao iniciar Oracle Client: {e}")
+
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.utils import get_column_letter

@@ -1,0 +1,15 @@
+services:
+  streamlit:
+    build: .
+    container_name: streamlit-app
+    restart: always
+    ports:
+      - "8502:8501"
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
