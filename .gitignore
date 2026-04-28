@@ -12,6 +12,11 @@ __pycache__/
 
 # Streamlit cache
 .streamlit/secrets.toml
+# secrets
+app/.streamlit/secrets.toml
+
+# oracle client
+instantclient*.zip
 
 # Ambientes virtuais
 venv/
